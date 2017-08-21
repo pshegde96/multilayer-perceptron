@@ -1,9 +1,9 @@
 import numpy as np
 import activations as act
 
-class layer:
+class Layer:
 
-    def __init__(self,activation='linear',in_dim=1,out_dim=1):
+    def __init__(self,activation='relu',in_dim=1,out_dim=1):
         self.activation = activation
         self.in_dim = in_dim
         self.out_dim = out_dim
