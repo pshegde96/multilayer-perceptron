@@ -1,5 +1,8 @@
 import numpy as np
 
+'''
+Computes the softmax of a matrix considering the rows as input variables
+'''
 def softmax(x,tmp=1):
     big = np.max(x,axis=1)
     x = x-big.reshape(-1,1)
