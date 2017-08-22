@@ -1,6 +1,5 @@
 import numpy as np
 import activations as act
-from softmax import softmax
 
 class Layer:
 
@@ -25,9 +24,7 @@ class Layer:
             self.A = self.Z
         elif self.activation == 'sigmoid':
             self.A = act.sigmoid_fn(self.Z)
-        elif self.activation =='relu':
+        else :
             self.A = act.relu_fn(self.Z)
-        else:
-            self.A = softmax(self.Z)  
 
         return self.A
