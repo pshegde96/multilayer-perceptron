@@ -17,8 +17,8 @@ class Network:
                                 out_dim=self.layers_size[l+1]))
             self.layers[l].init_variables() #initialize the weights of the layer
 
-        #Now add the final linear layer
-        self.layers.append(Layer(activation='linear',
+        #Now add the final softmax layer
+        self.layers.append(Layer(activation='softmax',
                             in_dim=self.layers_size[-2],
                             out_dim=self.layers_size[-1]))
         self.layers[-1].init_variables() #initialize the weights of the layer
