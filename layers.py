@@ -19,6 +19,7 @@ class Layer:
     Z = XW
     '''
     def forward(self,X):
+        self.X = X
         self.Z = X.dot(self.W)+self.b
         
         if self.activation == 'linear':
@@ -29,3 +30,22 @@ class Layer:
             self.A = act.relu_fn(self.Z)
 
         return self.A
+
+    def backward(self,delta_plus,W_plus):
+        
+        #process the final layer differently
+        if self.posn == 'final':
+            delta = np.copy(delta_plus)
+        
+        else:
+            if self.activation == 'linear':
+                f_derivative = np.ones_like(self.Z)
+            elif self.activation == 'sigmoid':
+                f_derivative = act.sigmoid_derivative(self.Z)
+            else:
+                f_derivative = act.relu_derivative(self.Z)
+            delta = (delta_plus.dot(W_plus.T))*f_derivative
+
+        self.dW = self.X.T.dot(delta)
+        #return delta to calc grad for the previous layer
+        return delta
