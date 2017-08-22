@@ -3,10 +3,11 @@ import activations as act
 
 class Layer:
 
-    def __init__(self,activation='relu',in_dim=1,out_dim=1):
+    def __init__(self,activation='relu',in_dim=1,out_dim=1,posn='hidden'):
         self.activation = activation
         self.in_dim = in_dim
         self.out_dim = out_dim
+        self.posn=posn
 
     #Initialize the weight matrix and the bias vector via Xavier Initialization
     def init_variables(self):

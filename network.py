@@ -22,20 +22,21 @@ class Network:
         #Now add the final softmax layer
         self.layers.append(Layer(activation='linear',
                             in_dim=self.layers_size[-2],
-                            out_dim=self.layers_size[-1]))
+                            out_dim=self.layers_size[-1]),
+                            posn='final')
         self.layers[-1].init_variables() #initialize the weights of the layer
 
     def forward_pass(self,X):
-        new_x = np.copy(X)
+        X_new = np.copy(X)
 
         for layer in self.layers:
-            old_x = np.copy(new_x)
-            new_x = layer.forward(old_x)
+            X_old = np.copy(X_new)
+            X_new = layer.forward(X_old)
 
         if self.task == 'classification':
-            new_x = softmax(new_x)
+            self.Y = softmax(X_new)
         #Yet to implement for regression
         else:
             pass
 
-        return new_x
+        return self.Y 
