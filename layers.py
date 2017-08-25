@@ -47,5 +47,6 @@ class Layer:
             delta = (delta_plus.dot(W_plus.T))*f_derivative
 
         self.dW = self.X.T.dot(delta)
+        self.db = np.ones((1,self.X.shape[0])).dot(delta)
         #return delta to calc grad for the previous layer
         return delta
