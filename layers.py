@@ -11,8 +11,8 @@ class Layer:
 
     #Initialize the weight matrix and the bias vector via Xavier Initialization
     def init_variables(self):
-        self.W = 0.01*np.random.randn(self.in_dim,self.out_dim)/np.sqrt(self.in_dim)
-        self.b = 0.01*np.ones((1,self.out_dim)) #initialize with a small +ve value so that relu neurons don't go to 0 at birth
+        self.W = 0.1*np.random.randn(self.in_dim,self.out_dim)/np.sqrt(self.in_dim)
+        self.b = 0.1*np.ones((1,self.out_dim)) #initialize with a small +ve value so that relu neurons don't go to 0 at birth
 
     '''
     The operation is A = f(Z)
