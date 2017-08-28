@@ -9,7 +9,7 @@ import argparse
 
 '''Parse CommandLine Arguments '''
 parser = argparse.ArgumentParser()
-parser.add_argument('--filename',help='Name of the image') #not yet implemented
+parser.add_argument('-filename',help='Name of the image') #not yet implemented
 parser.add_argument('-layers',help='Hidden Layers, pass as string with numbers separated by commas')
 parser.add_argument('-no_iter',help='Number of mini-batch iterations to train',type=int)
 parser.add_argument('-batch_size',help='Batch size',type=int)
@@ -18,7 +18,6 @@ parser.add_argument('-lr_decay',help='Learning Rate Decay every 200 epochs',type
 parser.add_argument('-lambda_reg',help='L2 norm regularization parameter',type=float)
 parser.add_argument('-savemodel',help='1 to save,default 0',type=int) #not yet implemented
 parser.add_argument('-modeldir',help='Specify dir to store models with / suffixed.Default:models/') #not yet implemented
-parser.add_argument('-sampledir',help='Specify dir to store samples with / suffixed.Default:samples/') #not yet implemented
 args = parser.parse_args()
 
 '''Important Parameters'''
@@ -27,7 +26,7 @@ if args.batch_size:
     BATCH_SIZE = int(args.batch_size)
 LAYERS_SIZE = [784,1000,500,250,10]
 if args.layers:
-    LAYERS_SIZE = map(int,args.hlayers.split(','))
+    LAYERS_SIZE = map(int,args.layers.split(','))
 LEARNING_RATE = 0.3
 if args.initial_lr:
     LEARNING_RATE = float(args.initial_lr)
@@ -40,6 +39,16 @@ if args.lambda_reg:
 NO_ITER = 8000
 if args.no_iter:
     NO_ITER = int(args.no_iter)
+
+'''Print the parameters so that user can verify them '''
+print 'Architecture: {}'.format(LAYERS_SIZE)
+print 'Batch Size: {}'.format(BATCH_SIZE)
+print 'Initial Learning Rate: {}'.format(LEARNING_RATE)
+print 'Learning Rate Decay every 200 iterations: {}'.format(LR_DECAY)
+print 'Lambda of L2 Weight Regularization: {}'.format(LAMBDA_REG)
+print 'Total Number of Iterations: {}'.format(NO_ITER)
+print '\n Press Enter to Continue'
+raw_input()
 
 
 
