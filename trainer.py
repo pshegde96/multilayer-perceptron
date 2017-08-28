@@ -5,14 +5,41 @@ from cross_entropy import cross_entropy
 import matplotlib.pyplot as plt
 import math
 import time
+import argparse
+
+'''Parse CommandLine Arguments '''
+parser = argparse.ArgumentParser()
+parser.add_argument('--filename',help='Name of the image') #not yet implemented
+parser.add_argument('-layers',help='Hidden Layers, pass as string with numbers separated by commas')
+parser.add_argument('-no_iter',help='Number of mini-batch iterations to train',type=int)
+parser.add_argument('-batch_size',help='Batch size',type=int)
+parser.add_argument('-initial_lr',help='Initial Learning Rate',type=float)
+parser.add_argument('-lr_decay',help='Learning Rate Decay every 200 epochs',type=float)
+parser.add_argument('-lambda_reg',help='L2 norm regularization parameter',type=float)
+parser.add_argument('-savemodel',help='1 to save,default 0',type=int) #not yet implemented
+parser.add_argument('-modeldir',help='Specify dir to store models with / suffixed.Default:models/') #not yet implemented
+parser.add_argument('-sampledir',help='Specify dir to store samples with / suffixed.Default:samples/') #not yet implemented
+args = parser.parse_args()
 
 '''Important Parameters'''
 BATCH_SIZE = 64
+if args.batch_size:
+    BATCH_SIZE = int(args.batch_size)
 LAYERS_SIZE = [784,1000,500,250,10]
+if args.layers:
+    LAYERS_SIZE = map(int,args.hlayers.split(','))
 LEARNING_RATE = 0.3
+if args.initial_lr:
+    LEARNING_RATE = float(args.initial_lr)
 LR_DECAY = 1.0 #EVERY 200 ITERATIONS
+if args.lr_decay:
+    LR_DECAY = float(args.lr_decay)
 LAMBDA_REG = 0.005
+if args.lambda_reg:
+    LAMBDA_REG = float(args.lambda_reg)
 NO_ITER = 8000
+if args.no_iter:
+    NO_ITER = int(args.no_iter)
 
 
 
