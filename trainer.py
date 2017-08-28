@@ -10,6 +10,7 @@ import argparse
 '''Parse CommandLine Arguments '''
 parser = argparse.ArgumentParser()
 parser.add_argument('-filename',help='Name of the image') #not yet implemented
+parser.add_argument('-activation',help='Activation in the Hidden Layers') 
 parser.add_argument('-layers',help='Hidden Layers, pass as string with numbers separated by commas')
 parser.add_argument('-no_iter',help='Number of mini-batch iterations to train',type=int)
 parser.add_argument('-batch_size',help='Batch size',type=int)
@@ -39,6 +40,9 @@ if args.lambda_reg:
 NO_ITER = 8000
 if args.no_iter:
     NO_ITER = int(args.no_iter)
+ACTIVATION = 'sigmoid'
+if args.activation:
+    ACTIVATION = str(args.activation)
 
 '''Print the parameters so that user can verify them '''
 print 'Architecture: {}'.format(LAYERS_SIZE)
@@ -47,6 +51,7 @@ print 'Initial Learning Rate: {}'.format(LEARNING_RATE)
 print 'Learning Rate Decay every 200 iterations: {}'.format(LR_DECAY)
 print 'Lambda of L2 Weight Regularization: {}'.format(LAMBDA_REG)
 print 'Total Number of Iterations: {}'.format(NO_ITER)
+print 'Activation in Hidden Layers: {}'.format(ACTIVATION)
 print '\n Press Enter to Continue'
 raw_input()
 
@@ -69,7 +74,7 @@ X_train = X_train/(X_std+1e-10)
 
 '''Let the training begin '''
 index = 0 #start from the first element
-net = Network(LAYERS_SIZE,activation='sigmoid')
+net = Network(LAYERS_SIZE,activation=ACTIVATION)
 net.init_network()
 
 loss_train = []
