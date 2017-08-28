@@ -46,7 +46,7 @@ class Network:
         #encode Y_vec in one-hot form
         Y = np.zeros_like(self.Y_hat)
         Y[range(self.Y_hat.shape[0]),Y_vec] = 1
-        delta_plus = self.Y_hat - Y 
+        delta_plus = (self.Y_hat - Y)/self.Y_hat.shape[0] 
 
         #process the final layer differently:
         delta_plus = self.layers[-1].backward(delta_plus=delta_plus,W_plus=None)
