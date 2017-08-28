@@ -80,40 +80,46 @@ net.init_network()
 loss_train = []
 steps = []
 
-for step in range(NO_ITER):
-    if index+BATCH_SIZE >= X_train.shape[0]:
-        index = 0
-        #permute the data to instill a sense of random sampling
-        permute = np.random.permutation(X_train.shape[0])
-        X_train = X_train[permute]
-        Y_train = Y_train[permute]
+#Use try block to stop the training when Ctrl-C is pressed
+try:
+    for step in range(NO_ITER):
+        if index+BATCH_SIZE >= X_train.shape[0]:
+            index = 0
+            #permute the data to instill a sense of random sampling
+            permute = np.random.permutation(X_train.shape[0])
+            X_train = X_train[permute]
+            Y_train = Y_train[permute]
 
-    X_batch = X_train[index:index+BATCH_SIZE]
-    Y_batch = Y_train[index:index+BATCH_SIZE]
+        X_batch = X_train[index:index+BATCH_SIZE]
+        Y_batch = Y_train[index:index+BATCH_SIZE]
 
-    Y_hat = net.forward_pass(X_batch)
+        Y_hat = net.forward_pass(X_batch)
 
-    #Record the training loss
-    loss = cross_entropy(Y_hat,Y_batch,one_hot='False')
-    loss_train.append(loss)
-    steps.append(step)
-    #if math.isnan(loss) :
-    #    wait = input('Press something to continue')
+        #Record the training loss
+        loss = cross_entropy(Y_hat,Y_batch,one_hot='False')
+        loss_train.append(loss)
+        steps.append(step)
+        #if math.isnan(loss) :
+        #    wait = input('Press something to continue')
 
-    #Update parameters
-    net.backward_pass(Y_batch)
-    for layer in net.layers:
-        layer.W -= LEARNING_RATE*(layer.dW+LAMBDA_REG*layer.W)
-        layer.b -= LEARNING_RATE*layer.db
+        #Update parameters
+        net.backward_pass(Y_batch)
+        for layer in net.layers:
+            layer.W -= LEARNING_RATE*(layer.dW+LAMBDA_REG*layer.W)
+            layer.b -= LEARNING_RATE*layer.db
 
-    if step%200 == 0:
-        #compute test loss
-        LEARNING_RATE *= LR_DECAY
-        Y_hat_test = net.forward_pass(X_test)
-        loss_test = cross_entropy(Y_hat_test,Y_test,one_hot='False')
-        print 'STEP: {} \t BATCH LOSS: {} \t TEST LOSS: {}'.format(step,loss,loss_test)
+        if step%200 == 0:
+            #compute test loss
+            LEARNING_RATE *= LR_DECAY
+            Y_hat_test = net.forward_pass(X_test)
+            loss_test = cross_entropy(Y_hat_test,Y_test,one_hot='False')
+            print 'STEP: {} \t BATCH LOSS: {} \t TEST LOSS: {}'.format(step,loss,loss_test)
 
-    index += BATCH_SIZE
+        index += BATCH_SIZE
+
+#If Ctrl-C is pressed, exit the training
+except KeyboardInterrupt:
+    print '\n'
 
 plt.plot(steps,loss_train)
 plt.show()
