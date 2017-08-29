@@ -41,7 +41,7 @@ class Network:
 
         return self.Y_hat 
 
-    def backward_pass(self,Y_vec):
+    def backward_pass(self,Y_vec,LAMBDA_REG=0):
         
         #encode Y_vec in one-hot form
         Y = np.zeros_like(self.Y_hat)
@@ -53,4 +53,4 @@ class Network:
 
         #go backwards through the layers, omitting the last layer
         for i in range(len(self.layers)-1):
-            delta_plus = self.layers[-2-i].backward(delta_plus=delta_plus,W_plus=np.copy(self.layers[-1-i].W))
+            delta_plus = self.layers[-2-i].backward(delta_plus=delta_plus,W_plus=np.copy(self.layers[-1-i].W),LAMBDA_REG=LAMBDA_REG)

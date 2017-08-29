@@ -31,7 +31,7 @@ class Layer:
 
         return self.A
 
-    def backward(self,delta_plus,W_plus):
+    def backward(self,delta_plus,W_plus,LAMBDA_REG=0):
         
         #process the final layer differently
         if self.posn == 'final':
@@ -46,7 +46,7 @@ class Layer:
                 f_derivative = act.relu_derivative(self.Z)
             delta = (delta_plus.dot(W_plus.T))*f_derivative
 
-        self.dW = self.X.T.dot(delta)
+        self.dW = self.X.T.dot(delta) + LAMBDA_REG*self.W 
         self.db = np.ones((1,self.X.shape[0])).dot(delta)
         #return delta to calc grad for the previous layer
         return delta

@@ -103,9 +103,9 @@ try:
         #    wait = input('Press something to continue')
 
         #Update parameters
-        net.backward_pass(Y_batch)
+        net.backward_pass(Y_batch,LAMBDA_REG)
         for layer in net.layers:
-            layer.W -= LEARNING_RATE*(layer.dW+LAMBDA_REG*layer.W)
+            layer.W -= LEARNING_RATE*(layer.dW)
             layer.b -= LEARNING_RATE*layer.db
 
         if step%200 == 0:
