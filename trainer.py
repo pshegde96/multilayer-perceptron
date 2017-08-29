@@ -4,10 +4,9 @@ from network import Network
 from cross_entropy import cross_entropy
 import matplotlib.pyplot as plt
 import math
-import time
-import argparse
-
-'''Parse CommandLine Arguments '''
+import time 
+import argparse 
+'''Parse CommandLine Arguments ''' 
 parser = argparse.ArgumentParser()
 parser.add_argument('-filename',help='Name of the image') #not yet implemented
 parser.add_argument('-activation',help='Activation in the Hidden Layers') 
@@ -17,6 +16,7 @@ parser.add_argument('-batch_size',help='Batch size',type=int)
 parser.add_argument('-initial_lr',help='Initial Learning Rate',type=float)
 parser.add_argument('-lr_decay',help='Learning Rate Decay every 200 epochs',type=float)
 parser.add_argument('-lambda_reg',help='L2 norm regularization parameter',type=float)
+parser.add_argument('-momentum',help='Momentum Weight',type=float)
 parser.add_argument('-savemodel',help='1 to save,default 0',type=int) #not yet implemented
 parser.add_argument('-modeldir',help='Specify dir to store models with / suffixed.Default:models/') #not yet implemented
 args = parser.parse_args()
@@ -43,12 +43,16 @@ if args.no_iter:
 ACTIVATION = 'sigmoid'
 if args.activation:
     ACTIVATION = str(args.activation)
+MOMENTUM = 0.0
+if args.momentum:
+    MOMENTUM = float(args.momentum)
 
 '''Print the parameters so that user can verify them '''
 print 'Architecture: {}'.format(LAYERS_SIZE)
 print 'Batch Size: {}'.format(BATCH_SIZE)
 print 'Initial Learning Rate: {}'.format(LEARNING_RATE)
 print 'Learning Rate Decay every 200 iterations: {}'.format(LR_DECAY)
+print 'Momentum Weight: {}'.format(MOMENTUM)
 print 'Lambda of L2 Weight Regularization: {}'.format(LAMBDA_REG)
 print 'Total Number of Iterations: {}'.format(NO_ITER)
 print 'Activation in Hidden Layers: {}'.format(ACTIVATION)
@@ -103,10 +107,10 @@ try:
         #    wait = input('Press something to continue')
 
         #Update parameters
-        net.backward_pass(Y_batch,LAMBDA_REG)
+        net.backward_pass(Y_batch,LAMBDA_REG,LEARNING_RATE= LEARNING_RATE,MOMENTUM=MOMENTUM)
         for layer in net.layers:
-            layer.W -= LEARNING_RATE*(layer.dW)
-            layer.b -= LEARNING_RATE*layer.db
+            layer.W += layer.dW_v
+            layer.b += layer.db_v
 
         if step%200 == 0:
             #compute test loss

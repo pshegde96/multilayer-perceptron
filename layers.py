@@ -13,6 +13,9 @@ class Layer:
     def init_variables(self):
         self.W = 0.1*np.random.randn(self.in_dim,self.out_dim)/np.sqrt(self.in_dim)
         self.b = 0.1*np.ones((1,self.out_dim)) #initialize with a small +ve value so that relu neurons don't go to 0 at birth
+        #momentum parameters; initialized with 0
+        self.dW_v = np.zeros_like(self.W)
+        self.db_v = np.zeros_like(self.b)
 
     '''
     The operation is A = f(Z)
@@ -31,7 +34,8 @@ class Layer:
 
         return self.A
 
-    def backward(self,delta_plus,W_plus,LAMBDA_REG=0):
+    def backward(self,delta_plus,W_plus,LAMBDA_REG=0,
+                LEARNING_RATE=0.1,MOMENTUM=0.3):
         
         #process the final layer differently
         if self.posn == 'final':
@@ -48,5 +52,7 @@ class Layer:
 
         self.dW = self.X.T.dot(delta) + LAMBDA_REG*self.W 
         self.db = np.ones((1,self.X.shape[0])).dot(delta)
+        self.dW_v = MOMENTUM*self.dW_v - LEARNING_RATE*self.dW
+        self.db_v = MOMENTUM*self.db_v - LEARNING_RATE*self.db
         #return delta to calc grad for the previous layer
         return delta
