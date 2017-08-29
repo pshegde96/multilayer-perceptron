@@ -71,10 +71,12 @@ Y_train = train_set[1]
 X_test = test_set[0]
 Y_test = test_set[1]
 
+#Normalize the data
 X_mean = np.mean(X_train,axis=0)
 X_train = X_train-X_mean
 X_std = np.sqrt(np.mean(X_train**2,axis=0))
 X_train = X_train/(X_std+1e-10)
+X_test = (X_test-X_mean)/(X_std+1e-7)
 
 '''Let the training begin '''
 index = 0 #start from the first element
@@ -117,7 +119,17 @@ try:
             LEARNING_RATE *= LR_DECAY
             Y_hat_test = net.forward_pass(X_test)
             loss_test = cross_entropy(Y_hat_test,Y_test,one_hot='False')
-            print 'STEP: {} \t BATCH LOSS: {} \t TEST LOSS: {}'.format(step,loss,loss_test)
+
+            #Also compute the test accuracy
+            p_test = net.forward_pass(X_test)
+            Y_test_hat = np.zeros_like(p_test)
+            Y_test_onehot = np.zeros_like(p_test)
+            for i in range(len(Y_test)):
+                Y_test_hat[i,np.argmax(p_test[i])]=1
+                Y_test_onehot[i,Y_test[i]] =1
+            test_accuracy = np.sum(Y_test_hat*Y_test_onehot)/Y_test.shape[0]
+
+            print 'STEP: {} \t BATCH LOSS: {} \t TEST LOSS: {} \t TEST ACCURACY: {}'.format(step,loss,loss_test,test_accuracy)
 
         index += BATCH_SIZE
 
@@ -128,7 +140,6 @@ except KeyboardInterrupt:
 plt.plot(steps,loss_train)
 plt.show()
 
-X_test = (X_test-X_mean)/(X_std+1e-7)
 p_test = net.forward_pass(X_test)
 Y_test_hat = np.zeros_like(p_test)
 Y_test_onehot = np.zeros_like(p_test)
