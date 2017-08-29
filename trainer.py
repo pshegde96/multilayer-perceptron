@@ -1,5 +1,5 @@
 import numpy as np
-import cPickle,gzip
+import pickle,shutil
 from network import Network
 from cross_entropy import cross_entropy
 import matplotlib.pyplot as plt
@@ -7,10 +7,11 @@ import math
 import time 
 import argparse 
 from mnist import MNIST
+import os
 
 '''Parse CommandLine Arguments ''' 
 parser = argparse.ArgumentParser()
-parser.add_argument('-filename',help='Name of the image') #not yet implemented
+parser.add_argument('model_id',help='Enter the model number') #not yet implemented
 parser.add_argument('-activation',help='Activation in the Hidden Layers') 
 parser.add_argument('-layers',help='Hidden Layers, pass as string with numbers separated by commas')
 parser.add_argument('-no_iter',help='Number of mini-batch iterations to train',type=int)
@@ -24,6 +25,7 @@ parser.add_argument('-modeldir',help='Specify dir to store models with / suffixe
 args = parser.parse_args()
 
 '''Important Parameters'''
+MODEL = './models/'+str(args.model_id)
 BATCH_SIZE = 64
 if args.batch_size:
     BATCH_SIZE = int(args.batch_size)
@@ -58,6 +60,11 @@ print 'Momentum Weight: {}'.format(MOMENTUM)
 print 'Lambda of L2 Weight Regularization: {}'.format(LAMBDA_REG)
 print 'Total Number of Iterations: {}'.format(NO_ITER)
 print 'Activation in Hidden Layers: {}'.format(ACTIVATION)
+
+if os.path.exists(MODEL):
+    print '\n\n WARNING!!!: The model id that you are trying to train already exists.'
+    print 'If you continue the program the existing model will be deleted \n\n\n'
+
 print '\n Press Enter to Continue'
 raw_input()
 
@@ -153,3 +160,22 @@ for i in range(len(Y_test)):
     Y_test_onehot[i,Y_test[i]] =1
 
 print np.sum(Y_test_hat*Y_test_onehot)/Y_test.shape[0]
+
+'''Save the model'''
+
+for layer in net.layers:
+    del layer.dW
+    del layer.dW_v
+    del layer.db
+    del layer.db_v
+    del layer.X
+    del layer.Z
+    del layer.A
+
+
+if os.path.exists(MODEL):
+    shutil.rmtree(MODEL)
+os.makedirs(MODEL)
+with open(MODEL+'/weights.pkl','wb') as output:
+    pickle.dump(net,output,pickle.HIGHEST_PROTOCOL)
+
