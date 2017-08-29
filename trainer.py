@@ -184,6 +184,6 @@ with open(MODEL+'/weights.pkl','wb') as output:
     pickle.dump(net,output,pickle.HIGHEST_PROTOCOL)
 
 #Also save the important data
-with open(MODEL+'data.pkl','wb') as output:
+with open(MODEL+'/data.pkl','wb') as output:
     pickle.dump([steps_train,loss_train,steps_test,loss_test,accuracy_test],output,pickle.HIGHEST_PROTOCOL)
 
