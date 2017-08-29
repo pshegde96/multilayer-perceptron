@@ -38,7 +38,7 @@ if args.initial_lr:
 LR_DECAY = 1.0 #EVERY 200 ITERATIONS
 if args.lr_decay:
     LR_DECAY = float(args.lr_decay)
-LAMBDA_REG = 0.005
+LAMBDA_REG = 0.0
 if args.lambda_reg:
     LAMBDA_REG = float(args.lambda_reg)
 NO_ITER = 8000
