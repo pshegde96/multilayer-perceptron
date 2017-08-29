@@ -96,7 +96,10 @@ net = Network(LAYERS_SIZE,activation=ACTIVATION)
 net.init_network()
 
 loss_train = []
-steps = []
+steps_train = []
+loss_test = []
+steps_test = []
+accuracy_test = []
 
 #Use try block to stop the training when Ctrl-C is pressed
 try:
@@ -116,9 +119,7 @@ try:
         #Record the training loss
         loss = cross_entropy(Y_hat,Y_batch,one_hot='False')
         loss_train.append(loss)
-        steps.append(step)
-        #if math.isnan(loss) :
-        #    wait = input('Press something to continue')
+        steps_train.append(step)
 
         #Update parameters
         net.backward_pass(Y_batch,LAMBDA_REG,LEARNING_RATE= LEARNING_RATE,MOMENTUM=MOMENTUM)
@@ -130,7 +131,7 @@ try:
             #compute test loss
             LEARNING_RATE *= LR_DECAY
             Y_hat_test = net.forward_pass(X_test)
-            loss_test = cross_entropy(Y_hat_test,Y_test,one_hot='False')
+            loss_test1 = cross_entropy(Y_hat_test,Y_test,one_hot='False')
 
             #Also compute the test accuracy
             p_test = net.forward_pass(X_test)
@@ -141,7 +142,12 @@ try:
                 Y_test_onehot[i,Y_test[i]] =1
             test_accuracy = np.sum(Y_test_hat*Y_test_onehot)/Y_test.shape[0]
 
-            print 'STEP: {} \t BATCH LOSS: {} \t TEST LOSS: {} \t TEST ACCURACY: {}'.format(step,loss,loss_test,test_accuracy)
+            #Record data
+            steps_test.append(step)
+            loss_test.append(loss_test1)
+            accuracy_test.append(test_accuracy)
+
+            print 'STEP: {} \t BATCH LOSS: {} \t TEST LOSS: {} \t TEST ACCURACY: {}'.format(step,loss,loss_test1,test_accuracy)
 
         index += BATCH_SIZE
 
@@ -149,8 +155,6 @@ try:
 except KeyboardInterrupt:
     print '\n'
 
-plt.plot(steps,loss_train)
-plt.show()
 
 p_test = net.forward_pass(X_test)
 Y_test_hat = np.zeros_like(p_test)
@@ -178,4 +182,8 @@ if os.path.exists(MODEL):
 os.makedirs(MODEL)
 with open(MODEL+'/weights.pkl','wb') as output:
     pickle.dump(net,output,pickle.HIGHEST_PROTOCOL)
+
+#Also save the important data
+with open(MODEL+'data.pkl','wb') as output:
+    pickle.dump([steps_train,loss_train,steps_test,loss_test,accuracy_test],output,pickle.HIGHEST_PROTOCOL)
 
