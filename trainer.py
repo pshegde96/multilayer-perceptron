@@ -11,7 +11,7 @@ import os
 
 '''Parse CommandLine Arguments ''' 
 parser = argparse.ArgumentParser()
-parser.add_argument('model_id',help='Enter the model number') #not yet implemented
+parser.add_argument('model_id',help='Enter the model number') 
 parser.add_argument('-activation',help='Activation in the Hidden Layers') 
 parser.add_argument('-layers',help='Hidden Layers, pass as string with numbers separated by commas')
 parser.add_argument('-no_iter',help='Number of mini-batch iterations to train',type=int)
