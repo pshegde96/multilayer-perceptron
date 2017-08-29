@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import math
 import time 
 import argparse 
+from mnist import MNIST
+
 '''Parse CommandLine Arguments ''' 
 parser = argparse.ArgumentParser()
 parser.add_argument('-filename',help='Name of the image') #not yet implemented
@@ -62,14 +64,17 @@ raw_input()
 
 
 '''Load the Data-Set'''
-f = gzip.open('mnist.pkl.gz','rb')
-train_set,val_set,test_set = cPickle.load(f)
-f.close()
 
-X_train =train_set[0]
-Y_train = train_set[1]
-X_test = test_set[0]
-Y_test = test_set[1]
+data = MNIST('./data/')
+X_train,Y_train = data.load_training()
+X_test,Y_test = data.load_testing()
+
+X_train = np.array(X_train)
+Y_train = np.array(Y_train)
+
+X_test = np.array(X_test)
+Y_test = np.array(Y_test)
+
 
 #Normalize the data
 X_mean = np.mean(X_train,axis=0)
